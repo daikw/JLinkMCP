@@ -22,7 +22,7 @@ func main() {
 
 	// Register the jlink.reset command handler
 	jlinkResetTool := mcp.NewTool(
-		"jlink.reset",
+		"jlink_reset",
 		mcp.WithDescription("Reset a device using J-Link Commander"),
 	)
 
@@ -42,10 +42,12 @@ func handleJLinkReset(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTo
 	scriptPath := filepath.Join(tmpDir, "cmds.jlink")
 
 	// Write the J-Link Commander script
-	scriptContent := `device NRF52
+	scriptContent := `
 speed 4000
+eoe 1
+connect
 r
-g
+mem 0x10000060 8
 q
 `
 	if err := os.WriteFile(scriptPath, []byte(scriptContent), 0644); err != nil {
@@ -54,7 +56,7 @@ q
 	defer os.Remove(scriptPath) // Clean up the temporary file
 
 	// Execute the J-Link Commander with the script
-	cmd := exec.Command("JLinkExe", "-CommanderScript", scriptPath)
+	cmd := exec.Command("JLinkExe", "-device", "nRF52", "-speed", "4000", "-if", "SWD", "-CommanderScript", scriptPath)
 	output, err := cmd.CombinedOutput()
 
 	if err != nil {
