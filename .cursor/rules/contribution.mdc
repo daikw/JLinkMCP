@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 実装時の情報
+
+- `mark3labs/mcp-go` を使ってください
+  - URL は https://github.com/mark3labs/mcp-go です
+  - 公開されている実装例が少ないので、レポジトリの情報を中心に実装してください
